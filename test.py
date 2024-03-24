@@ -1,5 +1,4 @@
 from ultralytics import YOLO
-import os 
 import tkinter as tk
 from tkinter import filedialog
 
