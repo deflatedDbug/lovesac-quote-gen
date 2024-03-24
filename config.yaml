@@ -1,0 +1,14 @@
+path: C:\Users\Subin Lebow\desktop\quote-gen
+train: images/train
+val: images/train
+
+names: 
+ 0: standard-seat
+ 1: deep-seat
+ 2: standard-side
+ 3: deep-side
+ 4: angled-side
+ 5: angled-deep-side
+ 6: rollarm-side
+ 7: wedge-seat
+ 
