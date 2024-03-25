@@ -1,28 +1,38 @@
 from ultralytics import YOLO
-import tkinter as tk
-from tkinter import filedialog
+import cv2
 
-# Initializing Tkinter root
-root = tk.Tk()
-root.withdraw()
+model_weights = "runs/detect/train/weights/best.pt"
+model = YOLO(model_weights)
 
-# Prompt the user to select an image file
-image_path = filedialog.askopenfilename(
-    title="Select an Image",
-    filetypes=[("Image files", "*.jpg *.jpeg *.png")]
-)
+cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    print("Cannot open camera. Exiting.")
+    exit()
 
-# Check if a file was selected
-if not image_path: 
-    print("No file selected. Exiting.")
+print("Press 'space' to capture the image, 'ESC' to exit...")
 
-else: 
-    # Initialize the YOLO model with your custom model weights
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        print("Can't receive frame (stream end?). Exiting ...")
+        break
 
-    model_weights = "runs/detect/train/weights/best.pt"
+    cv2.imshow("Camera Feed - Press Space to Capture", frame)
 
-    model = YOLO(model_weights)
+    key = cv2.waitKey(1)
+    if key % 256 == 32:
+        # Save captured image to a file
+        image_path = "captured_image.jpg"
+        cv2.imwrite(image_path, frame)
+        print("Image captured.")
+        
+        result = model(image_path, save=True)
+        print("Processing result:", result)
 
-    result = model(image_path, save=True)
+        break
+    elif key % 256 == 27:
+        print("Exiting.")
+        break
 
-
+cap.release()
+cv2.destroyAllWindows()  # Ensure this is called correctly to close windows
